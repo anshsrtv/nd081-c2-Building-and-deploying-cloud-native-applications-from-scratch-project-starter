@@ -1,9 +1,9 @@
 {
   "IsEncrypted": true,
   "Values": {
-    "FUNCTIONS_WORKER_RUNTIME": "CfDJ8KvJ6DmYyMJCgkPKMHi9yggxobSNL+EiBudqjTbkN08MV8FPGx7WqKyJXi1vK5/3O48YnxQvGjJtBiH2gbzh8qUxrA2On+1JRf1xQeWwdKwATocSwT1CMT9SN2gtzXs0ZQ=="
+    "FUNCTIONS_WORKER_RUNTIME": "CfDJ8Mf5UpM14ptOuRyXEScJUjoetq1ZFaCVGz3xrXHQ0Jf/B/x3nliPQSo9R2l3PzTKUIO0pE8zUfOxdtFXV5R3avSw+xpkut/MZ9PWfMeW0Lj1CVa8FehtZTL0BNdec6Hizw=="
   },
   "ConnectionStrings": {},
 
-  "AzureWebJobsStorage": ""
+  "AzureWebJobsStorage": "CfDJ8Mf5UpM14ptOuRyXEScJUjoKC9yHr/Bzo9wTnyBNG1DmzogD89uK8o1nEjNsDMHVvMeH6W7uyr3sLs67paOXMctHMOXqzLCNThfCG8tRDnhQjlfTZ3gBD9QXja3gGYrt0t5t5nSIwfCziDAGG+jlInN/y8INtltRRV2eBlBWGT2FzEKVfTfTJ4F675Liu3Q6upl8B/dbpSIIwEykA9mkQhmhbJXXL1U//xTxjIWv2OvOATgs+DRSdOFjpjYrxjllK8W5YTIl+gEWcuHRzan8rFWhnpOrpTG20exiJBjmCRd5P6ILm/jagqFIrsIaek/P5Fodtlr+eEEWU7OloefbQNv6Jr0FxHVWQGacL8aRZlLbg8sC9P3weI9spOcnRCn8ew=="
 }
