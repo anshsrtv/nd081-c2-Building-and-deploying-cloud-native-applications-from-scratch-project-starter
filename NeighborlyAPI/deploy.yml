@@ -1,0 +1,199 @@
+data:
+  APPINSIGHTS_INSTRUMENTATIONKEY: YjgyN2RjOTctNjMyOS00N2E3LWIzYTAtNGQzZTg5OTk0M2Rm
+  APPLICATIONINSIGHTS_CONNECTION_STRING: SW5zdHJ1bWVudGF0aW9uS2V5PWE2MmI2MDFiLTBkN2MtNGE0ZS1iZjkwLThjZmU1NGIwOTYzZTtJbmdlc3Rpb25FbmRwb2ludD1odHRwczovL2Vhc3R1cy04LmluLmFwcGxpY2F0aW9uaW5zaWdodHMuYXp1cmUuY29tLw==
+  AzureWebJobsStorage: RGVmYXVsdEVuZHBvaW50c1Byb3RvY29sPWh0dHBzO0FjY291bnROYW1lPW5laWdoYm91cnlzdG9yYWdlO0FjY291bnRLZXk9bWFLMlg2YnFlTWl3bEZXR0ZhMmNRY0FYYktQNTVOOEV0TkltSjcvL0JBRm5sOEJtb2pMVnZIOWpDK1g3a2Q4RmNaS0N1eGxoeWhFN0hFeVNUYTNhblE9PTtFbmRwb2ludFN1ZmZpeD1jb3JlLndpbmRvd3MubmV0
+  FUNCTIONS_EXTENSION_VERSION: fjM=
+  FUNCTIONS_WORKER_RUNTIME: cHl0aG9u
+apiVersion: v1
+kind: Secret
+metadata:
+  name: neighbourlycluster
+---
+data:
+  host.master: OU03T0hpVkdPdFhETlZGL2hsY0ZTVlh5dWNTV2FSU2FQb0pmL2RtejVmT0s4Rk9JZUlza2FnPT0=
+  host.function.default: UXVmYmJJVnM4ZGdROHJzUnlIWTdTcGF2WGFpZnJMa1p2YnZXRzZPbWFEQXFyWWV1NVlnU3ZBPT0=
+  host.systemKey.default: eGd5a3IyaDEvaEFEL2FZT29uQi9ZcEd1YWhYU2JRUW5TZlhqb0FkaUZ2cHo4NUhRVXlyRDl3PT0=
+  functions.createadvertisement.default: cmpTRzZpT0Z4Um5ackVFNzRiTGNQZ09qblRPeURwbzdVT05qTjI0VHhBS2ZpMU1SQlhNYUl3PT0=
+  functions.deleteadvertisement.default: WDc0cmlqbW40OVlIN0xIZ1duNHdtYVZEZW1VSmJhOGVYejZPR1hVTG1STTBqTUR1cDFYSDFRPT0=
+  functions.getadvertisement.default: MXR5NzZPSWVlOHdhaEdVaUVvTENmRk1VQm9hcndUOVRoR2YvTnRaNmRLRHFnSTM3RE1YQURRPT0=
+  functions.getadvertisements.default: Q21hNFJjUnhCZ2JkSThEVnRkd2thd3F5WTFxT1pNalZ2bjg2RW10aUpzR1RJbVcxaHluZ0pRPT0=
+  functions.getpost.default: Z1Awd0s5Y0RYZW9oY1hvblVNa3ZpVjFxVDFKdDlBdXB0a2FsMTNBVUFQaTNreGFJWE80S053PT0=
+  functions.getposts.default: V3hPSThOejJiS3hyR0pHYkRGZVM4ZmpWMGpaa3dTTTZ0a092NHNNT01rdFQ1RDVsQUxyMVJBPT0=
+  functions.updateadvertisement.default: SGc2ZGIvSEV6ajZ2YVkzcUFsbDVQWlJDZXRFa0tpVWI3MzB3aHdxMVN5bGYwSHVQMkp2NEV3PT0=
+apiVersion: v1
+kind: Secret
+metadata:
+  name: func-keys-kube-secret-neighbourlycluster
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: neighbourlycluster-function-keys-identity-svc-act
+---
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - secrets
+  - configMaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: functions-keys-manager-role
+---
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: functions-keys-manager-role
+subjects:
+- kind: ServiceAccount
+  name: neighbourlycluster-function-keys-identity-svc-act
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: neighbourlycluster-function-keys-identity-svc-act-functions-keys-manager-rolebinding
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: neighbourlycluster-http
+spec:
+  selector:
+    app: neighbourlycluster-http
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neighbourlycluster-http
+  labels:
+    app: neighbourlycluster-http
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: neighbourlycluster-http
+  template:
+    metadata:
+      labels:
+        app: neighbourlycluster-http
+    spec:
+      containers:
+      - name: neighbourlycluster-http
+        image: neighbourlyacr.azurecr.io/neighbourlyimage:v1
+        ports:
+        - containerPort: 80
+        env:
+        - name: AzureFunctionsJobHost__functions__0
+          value: createAdvertisement
+        - name: AzureFunctionsJobHost__functions__1
+          value: deleteAdvertisement
+        - name: AzureFunctionsJobHost__functions__2
+          value: getAdvertisement
+        - name: AzureFunctionsJobHost__functions__3
+          value: getAdvertisements
+        - name: AzureFunctionsJobHost__functions__4
+          value: getPost
+        - name: AzureFunctionsJobHost__functions__5
+          value: getPosts
+        - name: AzureFunctionsJobHost__functions__6
+          value: updateAdvertisement
+        - name: AzureWebJobsSecretStorageType
+          value: kubernetes
+        - name: AzureWebJobsKubernetesSecretName
+          value: secrets/func-keys-kube-secret-neighbourlycluster
+        envFrom:
+        - secretRef:
+            name: neighbourlycluster
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 240
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+        startupProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 240
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+      serviceAccountName: neighbourlycluster-function-keys-identity-svc-act
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: neighbourlycluster
+  labels:
+    app: neighbourlycluster
+spec:
+  selector:
+    matchLabels:
+      app: neighbourlycluster
+  template:
+    metadata:
+      labels:
+        app: neighbourlycluster
+    spec:
+      containers:
+      - name: neighbourlycluster
+        image: neighbourlyacr.azurecr.io/neighbourlyimage:v1
+        env:
+        - name: AzureFunctionsJobHost__functions__0
+          value: eventHubTrigger
+        envFrom:
+        - secretRef:
+            name: neighbourlycluster
+        readinessProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 240
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+        startupProbe:
+          failureThreshold: 3
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 240
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
+      serviceAccountName: neighbourlycluster-function-keys-identity-svc-act
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: neighbourlycluster
+  labels: {}
+spec:
+  scaleTargetRef:
+    name: neighbourlycluster
+  triggers:
+  - type: eventgridtrigger
+    metadata:
+      direction: in
+      eventHubName: neighbourlyevent
+      connection: Endpoint=sb://neighbourlyhub.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=aStAlLukzK4BWTcClh+OC6D0qFewRYbiZGEWwpPnICU=
+---
+
